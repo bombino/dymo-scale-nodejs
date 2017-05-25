@@ -18,7 +18,7 @@
       pid = 0x8003,
       msg = '';
 
-  startReading();
+  interval = setInterval(startReading, 1000);
 
   usb.on('attach', function (device) {
       if (device.deviceDescriptor.idVendor === vid && device.deviceDescriptor.idProduct === pid) {
@@ -31,7 +31,6 @@
               content: msg
           });
 
-          interval = setInterval(startReading, 1000);
       }
   });
 
@@ -47,7 +46,6 @@
           });
 
           reading = false;
-          clearInterval(interval);
       }
   });
 
