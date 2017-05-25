@@ -59,30 +59,47 @@
 
           d.on('data', function (data) {
               var buf = new Buffer(data);
-              logger.trace(util.format('0: %s\t0: %s\t0: %s\t0: %s', buf[0], buf[1], buf[2], buf[3]));
+              logger.debug(util.format('0: %s\t1: %s\t2: %s\t3: %s', buf[0], buf[1], buf[2], buf[3]));
 
-              var grams = buf[4] + (256 * buf[5]);
+              var factor = buf[3];
+              if (factor > 127) factor -= 256;
+              var weight = (buf[4] + (256 * buf[5])) * Math.pow(10, factor);
+              var ounces, grams;
+              if (buf[2] == 11) {
+                  ounces = weight;
+                  grams = ounces * 28.3495;
+                  var description = "ounces";
+              } else {
+                  grams = weight;
+                  ounces = grams / 28.3495;
+                  var description = "grams";
+              }
+
               if (buf[1] === 5) {
-                  msg = 'TARE IS ON';
-                  logger.warn(msg);
+                  logger.warn("Weight is Negative");
                   server.subscriber.emit('message', {
-                      type: 'status',
-                      code: 'tare',
-                      content: msg
+                      status: 'error',
+                      error: 'negative_weight'
                   });
-              } else if (grams > 0 && buf[3] === 255) { // in ounce
-                  msg = 'Please switch to gram';
-                  logger.warn(msg);
+              } else if (buf[1] === 6) {
+                  logger.warn("Scale Overloaded");
                   server.subscriber.emit('message', {
-                      type: 'status',
-                      code: 'ounce',
-                      content: msg
+                      status: 'error',
+                      error: 'overloaded'
+                  });
+              } else if (buf[1] === 3) {
+                  logger.warn("Stabilizing");
+                  server.subscriber.emit('message', {
+                      status: 'error',
+                      error: 'stabilizing'
                   });
               } else {
-                  logger.debug(grams + ' grams');
+                  logger.debug(weight + ' ' + description);
                   server.subscriber.emit('message', {
-                      type: 'weight',
-                      content: grams
+                      status: 'ok',
+                      mode: description,
+                      grams: grams,
+                      ounces: ounces
                   });
               }
           });
