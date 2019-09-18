@@ -1,13 +1,11 @@
   process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
-  var config = require('./config'),
-      HID = require('node-hid'),
+  var HID = require('node-hid'),
       usb = require('usb'),
       log4js = require('log4js'),
       util = require('util'),
       server = require('./server').start();
 
-  log4js.configure(config.log);
   var logger = log4js.getLogger();
 
   logger.info('started in ' + process.env.NODE_ENV + ' mode');

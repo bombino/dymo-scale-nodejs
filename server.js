@@ -3,11 +3,9 @@
 var WebSocketServer = require('ws').Server,
     log4js = require('log4js'),
     EventEmitter = require('events').EventEmitter,
-    config = require('./config'),
     subscriber = new EventEmitter(),
     uuid = require('uuid');
 
-log4js.configure(config.log);
 var log = log4js.getLogger();
 
 exports.start = function (port) {

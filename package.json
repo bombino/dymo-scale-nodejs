@@ -4,9 +4,10 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "log4js": "^1.0.1",
-    "node-hid": "^0.5.2",
+    "log4js": "^5.1.0",
+    "node-hid": "^0.7.9",
     "usb": "^1.2.0",
+    "uuid": "^3.3.3",
     "ws": "^1.1.1"
   },
   "devDependencies": {
@@ -14,7 +15,7 @@
     "grunt-concurrent": "^2.3.1",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-env": "^0.4.4",
+    "grunt-env": "^1.0.1",
     "grunt-nodemon": "^0.4.2"
   },
   "scripts": {
